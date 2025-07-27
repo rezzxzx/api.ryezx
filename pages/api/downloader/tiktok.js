@@ -22,29 +22,14 @@ export default async function handler(req, res) {
       });
     }
 
-    const data = result.result;
-
     const formatted = {
-      creator: "ryezx",
-      status: true,
-      data: {
-        title: data.title,
-        thumbnail: data.thumbnail,
-        duration: data.duration,
-        play_count: data.play_count,
-        like_count: data.like_count,
-        share_count: data.share_count,
-        comment_count: data.comment_count,
-        region: data.region,
-        video_display: data.video,
-        video_hd: data.video_hd,
-        music_display: data.music,
-        music_download: data.music_url
-      }
+      creator: "RyezX",
+      note: "Rest API's by RyezX",
+      ...result // biar hasil result tetap asli dari XSky
     };
 
     res.setHeader("Content-Type", "application/json");
-    res.status(200).end(JSON.stringify(formatted, null, 2));
+    res.status(200).end(JSON.stringify(formatted, null, 2)); // Pretty printed
   } catch (err) {
     res.status(500).json({
       status: false,
