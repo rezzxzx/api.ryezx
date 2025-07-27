@@ -1,7 +1,10 @@
 export default function handler(req, res) {
-  res.status(200).json({
+  const data = {
     creator: "ryezx",
     status: true,
     message: "API is working perfectly!"
-  }, null, 2); // ini gak jalan, jadi kita ubah manual
+  };
+
+  res.setHeader("Content-Type", "application/json");
+  res.status(200).end(JSON.stringify(data, null, 2));
 }
