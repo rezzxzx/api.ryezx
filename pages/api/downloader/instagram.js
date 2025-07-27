@@ -1,4 +1,5 @@
-import axios from 'axios';
+// api/downloader/instagram.js
+import axios from "axios";
 
 export default async function handler(req, res) {
   const { url } = req.query;
@@ -8,35 +9,41 @@ export default async function handler(req, res) {
       creator: "RyezX",
       note: "Rest API's by RyezX",
       status: false,
-      message: "Masukkan parameter url",
+      message: "Parameter 'url' tidak ditemukan!",
     });
   }
 
   try {
-    const { data } = await axios.get(`https://xskycode-api.vercel.app/download/instagram?apikey=XSkycode&url=${encodeURIComponent(url)}`);
+    const response = await axios.get(
+      `https://xskycode-api.vercel.app/download/instagram?apikey=XSkycode&url=${encodeURIComponent(url)}`
+    );
 
-    if (!data.status || !data.result || !data.result.data) {
+    const data = response.data;
+
+    if (!data.status || !data.result) {
       return res.status(500).json({
         creator: "RyezX",
         note: "Rest API's by RyezX",
         status: false,
-        message: "Gagal mengambil data dari API XSky",
+        message: "Gagal mengambil data dari API XSky.",
       });
     }
 
-    res.setHeader("Content-Type", "application/json");
-    res.status(200).send(JSON.stringify({
+    res.status(200).json({
       creator: "RyezX",
       note: "Rest API's by RyezX",
       status: true,
-      result: data.result.data
-    }, null, 2));
-  } catch (e) {
+      result: data.result, // biar sesuai seperti yang Sky kasih langsung
+    });
+  } catch (err) {
+    console.error("Error:", err.message);
+
     res.status(500).json({
       creator: "RyezX",
       note: "Rest API's by RyezX",
       status: false,
-      message: "❌ Terjadi kesalahan saat mengambil data dari API",
+      message: "Gagal mengambil data dari API XSky (axios error).",
+      debug: err.message,
     });
   }
 }
