@@ -1,2 +1,0 @@
-# api.ryezx
-my apis
