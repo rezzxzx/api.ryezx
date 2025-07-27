@@ -34,7 +34,7 @@ export default async function handler(req, res) {
         creator: "RyezX",
         note: "Rest API's by RyezX",
         status: false,
-        message: "Gagal mengambil data dari API XSky.",
+        message: "Gagal mengambil data dari API.",
       }, null, 2)
     );
   }
