@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     if (!data || !data.result) {
       return res.status(500).json({
         status: false,
-        message: "Gagal mengambil data dari XSky"
+        message: "Gagal mengambil data dari API"
       });
     }
 
