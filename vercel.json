@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/downloader/tiktok", "destination": "/api/downloader/tiktok" },
+    { "source": "/ai/cgpt", "destination": "/api/ai/cgpt" },
+    { "source": "/search/lyrics", "destination": "/api/search/lyrics" },
+    { "source": "/tools/ip", "destination": "/api/tools/ip" }
+  ]
+}
