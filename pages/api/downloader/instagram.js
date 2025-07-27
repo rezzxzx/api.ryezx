@@ -21,13 +21,15 @@ export default async function handler(req, res) {
     const data = response.data;
 
     if (!data.status || !data.result) {
-      return res.status(500).json({
-        creator: "RyezX",
-        note: "Rest API's by RyezX",
-        status: false,
-        message: "Gagal mengambil data dari API XSky.",
-      });
-    }
+      res.setHeader("Content-Type", "application/json");
+res.status(200).send(
+  JSON.stringify({
+    creator: "RyezX",
+    note: "Rest API's by RyezX",
+    status: true,
+    result: data.result,
+  }, null, 2) // << ini bikin JSON-nya rapi (pretty printed)
+);
 
     res.status(200).json({
       creator: "RyezX",
@@ -42,7 +44,7 @@ export default async function handler(req, res) {
       creator: "RyezX",
       note: "Rest API's by RyezX",
       status: false,
-      message: "Gagal mengambil data dari API XSky (axios error).",
+      message: "Gagal mengambil data dari API (axios error).",
       debug: err.message,
     });
   }
