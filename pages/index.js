@@ -34,15 +34,15 @@ export default function Home() {
   };
 
   const handleTest = async (endpoint) => {
-    const baseURL = "https://your-domain.vercel.app/"; // ganti ke domain lu bro
-    const fullURL = baseURL + endpoint.path + encodeURIComponent(inputs[endpoint.name] || "");
-    try {
-      const res = await axios.get(fullURL);
-      setResults({ ...results, [endpoint.name]: res.data });
-    } catch (err) {
-      setResults({ ...results, [endpoint.name]: { error: "Gagal fetch data." } });
-    }
-  };
+  const baseURL = typeof window !== "undefined" ? window.location.origin + "/" : "/";
+  const fullURL = baseURL + endpoint.path + encodeURIComponent(inputs[endpoint.name] || "");
+  try {
+    const res = await axios.get(fullURL);
+    setResults({ ...results, [endpoint.name]: res.data });
+  } catch (err) {
+    setResults({ ...results, [endpoint.name]: { error: "Gagal fetch data." } });
+  }
+};
 
   return (
     <div className="min-h-screen bg-blue-950 text-white p-4">
