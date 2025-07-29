@@ -22,7 +22,7 @@ const endpoints = [
     placeholder: "ex: aesthetic wallpaper",
     path: "search/pinsearch?query=",
   },
-  // Tambah endpoint lain di sini bro 👇
+  // Tambahin endpoint baru di sini ya bro
 ];
 
 export default function Home() {
@@ -34,36 +34,23 @@ export default function Home() {
   };
 
   const handleTest = async (endpoint) => {
-    const baseURL =
-      typeof window !== "undefined" ? window.location.origin + "/" : "/";
-    const fullURL =
-      baseURL +
-      endpoint.path +
-      encodeURIComponent(inputs[endpoint.name] || "");
-
+    const baseURL = typeof window !== "undefined" ? window.location.origin + "/" : "/";
+    const fullURL = baseURL + endpoint.path + encodeURIComponent(inputs[endpoint.name] || "");
     try {
       const res = await axios.get(fullURL);
       setResults({ ...results, [endpoint.name]: res.data });
     } catch (err) {
-      setResults({
-        ...results,
-        [endpoint.name]: { error: "Gagal fetch data." },
-      });
+      setResults({ ...results, [endpoint.name]: { error: "Gagal fetch data." } });
     }
   };
 
   return (
     <div className="min-h-screen bg-blue-950 text-white p-4">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        🔗 Ryezx API Playground
-      </h1>
+      <h1 className="text-3xl font-bold text-center mb-8">🔗 Ryezx API Playground</h1>
 
       <div className="grid gap-8 max-w-3xl mx-auto">
         {endpoints.map((ep, idx) => (
-          <div
-            key={idx}
-            className="bg-blue-900 p-5 rounded-xl shadow-md transition hover:shadow-lg"
-          >
+          <div key={idx} className="bg-blue-900 p-5 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-2">{ep.name}</h2>
             <input
               type="text"
@@ -80,9 +67,9 @@ export default function Home() {
             </button>
 
             {results[ep.name] && (
-              <div className="bg-gray-900 mt-4 p-3 rounded overflow-x-auto max-h-96 text-sm">
-                <pre className="whitespace-pre text-green-400">
-                  <code>{JSON.stringify(results[ep.name], null, 2)}</code>
+              <div className="overflow-x-auto mt-4">
+                <pre className="bg-gray-800 p-3 rounded text-sm text-green-400 whitespace-pre w-full min-w-[300px]">
+                  {JSON.stringify(results[ep.name], null, 2)}
                 </pre>
               </div>
             )}
@@ -91,4 +78,4 @@ export default function Home() {
       </div>
     </div>
   );
-                }
+}
