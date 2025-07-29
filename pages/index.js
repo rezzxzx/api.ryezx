@@ -1,94 +1,12 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react"; import { Card, CardContent } from "@/components/ui/card"; import { Input } from "@/components/ui/input"; import { Button } from "@/components/ui/button"; import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 
-const apis = [
-  {
-    name: "TikTok Downloader",
-    endpoint: "/api/downloader/tiktok?url=",
-    placeholder: "Masukkan URL TikTok",
-  },
-  {
-    name: "YouTube Search",
-    endpoint: "/api/search/youtube?q=",
-    placeholder: "Cari video YouTube",
-  },
-  {
-    name: "ChatGPT AI",
-    endpoint: "/api/ai/chatgpt?question=",
-    placeholder: "Tulis pertanyaan...",
-  },
-];
+const apiList = [ { name: "TikTok Downloader", endpoint: "/downloader/tiktok?url=https://vm.tiktok.com/example" }, { name: "YouTube Downloader", endpoint: "/downloader/ytdl?url=https://youtube.com/watch?v=example" }, { name: "Pinterest Search", endpoint: "/search/pinsearch?query=nature" }, { name: "ChatGPT AI", endpoint: "/ai/chatgpt?question=Halo, apa kabar?" } ];
 
-export default function Home() {
-  const [inputs, setInputs] = useState({});
-  const [results, setResults] = useState({});
-  const [statuses, setStatuses] = useState({});
+export default function ApiDashboard() { const [results, setResults] = useState({}); const [loading, setLoading] = useState({});
 
-  useEffect(() => {
-    apis.forEach((api) => {
-      axios
-        .get(api.endpoint + "ping")
-        .then(() => setStatuses((s) => ({ ...s, [api.name]: true })))
-        .catch(() => setStatuses((s) => ({ ...s, [api.name]: false })));
-    });
-  }, []);
+const callApi = async (endpoint) => { setLoading((prev) => ({ ...prev, [endpoint]: true })); try { const res = await fetch(endpoint); const data = await res.json(); setResults((prev) => ({ ...prev, [endpoint]: data })); } catch (err) { setResults((prev) => ({ ...prev, [endpoint]: { error: true } })); } finally { setLoading((prev) => ({ ...prev, [endpoint]: false })); } };
 
-  const handleInputChange = (name, value) => {
-    setInputs({ ...inputs, [name]: value });
-  };
+useEffect(() => { apiList.forEach((api) => callApi(api.endpoint)); }, []);
 
-  const handleTest = async (name, endpoint) => {
-    try {
-      const url = endpoint + encodeURIComponent(inputs[name] || "");
-      const res = await axios.get(url);
-      setResults({ ...results, [name]: res.data });
-    } catch {
-      setResults({ ...results, [name]: { error: "Gagal Fetch API." } });
-    }
-  };
+return ( <div className="min-h-screen bg-blue-50 p-6"> <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">📡 Ryezx API Monitor</h1> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> {apiList.map((api) => ( <Card key={api.name} className="bg-white border border-blue-200 shadow-md"> <CardContent className="p-4"> <h2 className="text-lg font-semibold text-blue-700 mb-2">{api.name}</h2> <p className="text-sm text-gray-500 break-all mb-3">{api.endpoint}</p> <div className="flex items-center gap-2"> {loading[api.endpoint] ? ( <Loader2 className="animate-spin text-blue-500" /> ) : results[api.endpoint]?.error ? ( <XCircle className="text-red-500" /> ) : ( <CheckCircle2 className="text-green-500" /> )} <span className="text-sm"> {loading[api.endpoint] ? "Loading..." : results[api.endpoint]?.error ? "Error" : "Online"} </span> </div> <Button className="mt-3 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => callApi(api.endpoint)} > Test API </Button> </CardContent> </Card> ))} </div> </div> ); }
 
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-6">
-      <h1 className="text-4xl font-bold text-center mb-10 text-blue-400">⚙️ RyezX API Tester</h1>
-
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {apis.map((api) => (
-          <div
-            key={api.name}
-            className="backdrop-blur-md bg-white/5 border border-gray-700 rounded-2xl p-6 shadow-lg hover:shadow-blue-500/30 transition-all duration-300"
-          >
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-xl font-semibold">{api.name}</h2>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  statuses[api.name] ? "bg-green-500 text-black" : "bg-red-600 text-white"
-                }`}
-              >
-                {statuses[api.name] ? "Online" : "Offline"}
-              </span>
-            </div>
-
-            <input
-              className="w-full p-3 bg-gray-800 rounded-lg border border-gray-600 mb-4 text-white focus:outline-none"
-              placeholder={api.placeholder}
-              onChange={(e) => handleInputChange(api.name, e.target.value)}
-            />
-
-            <button
-              onClick={() => handleTest(api.name, api.endpoint)}
-              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:brightness-110 py-2 rounded-lg font-bold text-white transition-all duration-200"
-            >
-              🚀 Test API
-            </button>
-
-            <pre className="mt-4 bg-black/70 text-green-400 text-sm p-3 rounded-lg max-h-64 overflow-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-              {results[api.name]
-                ? JSON.stringify(results[api.name], null, 2)
-                : "// Hasil akan muncul di sini"}
-            </pre>
-          </div>
-        ))}
-      </div>
-    </main>
-  );
-}
