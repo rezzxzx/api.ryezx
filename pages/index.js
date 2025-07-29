@@ -73,4 +73,22 @@ export default function Home() {
               className="w-full p-2 rounded text-black mb-3"
             />
             <button
-              onClick={() => handleTest(ep
+              onClick={() => handleTest(ep)}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white font-medium"
+            >
+              Test
+            </button>
+
+            {results[ep.name] && (
+              <div className="bg-gray-900 mt-4 p-3 rounded overflow-x-auto max-h-96 text-sm">
+                <pre className="whitespace-pre text-green-400">
+                  <code>{JSON.stringify(results[ep.name], null, 2)}</code>
+                </pre>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+                }
