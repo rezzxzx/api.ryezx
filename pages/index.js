@@ -1,12 +1,54 @@
-import { useState, useEffect } from "react"; import { Card, CardContent } from "@/components/ui/card"; import { Input } from "@/components/ui/input"; import { Button } from "@/components/ui/button"; import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { useState } from "react";
 
-const apiList = [ { name: "TikTok Downloader", endpoint: "/downloader/tiktok?url=https://vm.tiktok.com/example" }, { name: "YouTube Downloader", endpoint: "/downloader/ytdl?url=https://youtube.com/watch?v=example" }, { name: "Pinterest Search", endpoint: "/search/pinsearch?query=nature" }, { name: "ChatGPT AI", endpoint: "/ai/chatgpt?question=Halo, apa kabar?" } ];
+export default function Home() {
+  const [url, setUrl] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-export default function ApiDashboard() { const [results, setResults] = useState({}); const [loading, setLoading] = useState({});
+  const handleTest = async () => {
+    if (!url) return;
+    setLoading(true);
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setResult(data);
+    } catch (err) {
+      setResult({ error: "Gagal fetch API" });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const callApi = async (endpoint) => { setLoading((prev) => ({ ...prev, [endpoint]: true })); try { const res = await fetch(endpoint); const data = await res.json(); setResults((prev) => ({ ...prev, [endpoint]: data })); } catch (err) { setResults((prev) => ({ ...prev, [endpoint]: { error: true } })); } finally { setLoading((prev) => ({ ...prev, [endpoint]: false })); } };
+  return (
+    <div className="min-h-screen bg-blue-50 py-10 px-4 flex flex-col items-center">
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-2xl border border-blue-200">
+        <h1 className="text-3xl font-bold text-blue-600 mb-6 text-center">
+          🧪 API Tester - Ryezx APIs
+        </h1>
 
-useEffect(() => { apiList.forEach((api) => callApi(api.endpoint)); }, []);
+        <input
+          type="text"
+          className="w-full px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
+          placeholder="Masukkan URL API..."
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
 
-return ( <div className="min-h-screen bg-blue-50 p-6"> <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">📡 Ryezx API Monitor</h1> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> {apiList.map((api) => ( <Card key={api.name} className="bg-white border border-blue-200 shadow-md"> <CardContent className="p-4"> <h2 className="text-lg font-semibold text-blue-700 mb-2">{api.name}</h2> <p className="text-sm text-gray-500 break-all mb-3">{api.endpoint}</p> <div className="flex items-center gap-2"> {loading[api.endpoint] ? ( <Loader2 className="animate-spin text-blue-500" /> ) : results[api.endpoint]?.error ? ( <XCircle className="text-red-500" /> ) : ( <CheckCircle2 className="text-green-500" /> )} <span className="text-sm"> {loading[api.endpoint] ? "Loading..." : results[api.endpoint]?.error ? "Error" : "Online"} </span> </div> <Button className="mt-3 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => callApi(api.endpoint)} > Test API </Button> </CardContent> </Card> ))} </div> </div> ); }
+        <button
+          onClick={handleTest}
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition-all"
+        >
+          {loading ? "Loading..." : "🔍 Tes API"}
+        </button>
 
+        <div className="mt-6">
+          <h2 className="text-lg font-bold mb-2 text-blue-500">📦 Hasil:</h2>
+          <pre className="bg-blue-100 p-4 rounded-xl overflow-x-auto text-sm text-gray-800 max-h-[400px]">
+            {result ? JSON.stringify(result, null, 2) : "Belum ada hasil"}
+          </pre>
+        </div>
+      </div>
+    </div>
+  );
+}
