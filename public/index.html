@@ -1,646 +1,76 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Testing Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --dark: #212529;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --border: #dee2e6;
-            --danger: #e63946;
-            --warning: #ffaa00;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f0f2f5;
-            color: var(--dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .container {
-            display: flex;
-            flex: 1;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-        
-        /* Header Styles */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .logo i {
-            font-size: 1.8rem;
-        }
-        
-        .logo h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        /* Sidebar Styles */
-        .sidebar {
-            width: 280px;
-            background-color: white;
-            border-right: 1px solid var(--border);
-            padding: 1.5rem 0;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-header {
-            padding: 0 1.5rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .sidebar-header h2 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-        
-        #add-endpoint-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-            width: 100%;
-        }
-        
-        #add-endpoint-btn:hover {
-            background-color: var(--secondary);
-        }
-        
-        .endpoints-list {
-            overflow-y: auto;
-            flex: 1;
-            padding: 1rem 0;
-        }
-        
-        .endpoint-item {
-            padding: 0.8rem 1.5rem;
-            border-left: 3px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .endpoint-item:hover {
-            background-color: rgba(67, 97, 238, 0.05);
-        }
-        
-        .endpoint-item.active {
-            background-color: rgba(67, 97, 238, 0.1);
-            border-left: 3px solid var(--primary);
-        }
-        
-        .endpoint-method {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-        
-        .method-get { background-color: #e8f5e9; color: #2e7d32; }
-        .method-post { background-color: #e3f2fd; color: #1565c0; }
-        .method-put { background-color: #fff8e1; color: #f57f17; }
-        .method-delete { background-color: #ffebee; color: #c62828; }
-        .method-patch { background-color: #f3e5f5; color: #6a1b9a; }
-        
-        .endpoint-name {
-            font-weight: 500;
-            margin-left: 10px;
-            flex: 1;
-        }
-        
-        .endpoint-actions {
-            display: flex;
-            gap: 8px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        
-        .endpoint-item:hover .endpoint-actions {
-            opacity: 1;
-        }
-        
-        .endpoint-actions button {
-            background: none;
-            border: none;
-            color: var(--gray);
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-        }
-        
-        .endpoint-actions button:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: var(--primary);
-        }
-        
-        /* Main Content Styles */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-        
-        .content-header {
-            margin-bottom: 2rem;
-        }
-        
-        .content-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .content-header p {
-            color: var(--gray);
-        }
-        
-        .api-form {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .url-input {
-            display: flex;
-        }
-        
-        .method-select {
-            width: 120px;
-            border: 1px solid var(--border);
-            border-right: none;
-            border-radius: 6px 0 0 6px;
-            padding: 0.5rem;
-            background-color: var(--light);
-            font-weight: 500;
-            color: var(--dark);
-        }
-        
-        .url-field {
-            flex: 1;
-            border: 1px solid var(--border);
-            border-radius: 0 6px 6px 0;
-            padding: 0.75rem;
-            font-size: 0.95rem;
-        }
-        
-        .url-field:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        
-        .headers-list, .params-list {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        
-        .list-header {
-            display: flex;
-            background-color: var(--light);
-            padding: 0.75rem;
-            font-weight: 500;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .list-header > div:first-child {
-            width: 40%;
-        }
-        
-        .list-header > div:last-child {
-            width: 60%;
-        }
-        
-        .list-item {
-            display: flex;
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .list-item:last-child {
-            border-bottom: none;
-        }
-        
-        .list-item input {
-            width: 100%;
-            border: none;
-            padding: 0.5rem;
-        }
-        
-        .list-item input:focus {
-            outline: none;
-        }
-        
-        .list-item .key-input {
-            border-right: 1px solid var(--border);
-            padding-right: 0.75rem;
-        }
-        
-        .list-item .value-input {
-            padding-left: 0.75rem;
-        }
-        
-        .add-item-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            padding: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .add-item-btn:hover {
-            background-color: rgba(67, 97, 238, 0.05);
-        }
-        
-        .body-textarea {
-            width: 100%;
-            height: 150px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1rem;
-            font-family: monospace;
-            resize: vertical;
-        }
-        
-        .body-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary);
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border);
-            color: var(--gray);
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--light);
-        }
-        
-        /* Response Styles */
-        .response-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-        }
-        
-        .response-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .response-header h3 {
-            font-size: 1.3rem;
-        }
-        
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-        
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-        
-        .status-success {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-        
-        .status-error {
-            background-color: #ffebee;
-            color: #c62828;
-        }
-        
-        .response-content {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1rem;
-            background-color: #fcfcfc;
-            font-family: monospace;
-            white-space: pre-wrap;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .json-key {
-            color: #d32f2f;
-        }
-        
-        .json-string {
-            color: #2e7d32;
-        }
-        
-        .json-number {
-            color: #1565c0;
-        }
-        
-        .json-boolean {
-            color: #7b1fa2;
-        }
-        
-        .json-null {
-            color: #7c4dff;
-        }
-        
-        /* Footer */
-        footer {
-            background-color: white;
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 992px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Tester</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body>
-    <header>
-        <div class="logo">
-            <i class="fas fa-cloud"></i>
-            <h1>API Testing Dashboard</h1>
-        </div>
-        <div class="user-info">
-            <i class="fas fa-user-circle"></i>
-        </div>
-    </header>
-    
-    <div class="container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>API Endpoints</h2>
-                <button id="add-endpoint-btn">
-                    <i class="fas fa-plus"></i> Add Endpoint
-                </button>
-            </div>
-            <div class="endpoints-list">
-                <div class="endpoint-item active">
-                    <div class="endpoint-info">
-                        <span class="endpoint-method method-get">GET</span>
-                        <span class="endpoint-name">/api/users</span>
-                    </div>
-                    <div class="endpoint-actions">
-                        <button title="Edit"><i class="fas fa-edit"></i></button>
-                        <button title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-                <div class="endpoint-item">
-                    <div class="endpoint-info">
-                        <span class="endpoint-method method-post">POST</span>
-                        <span class="endpoint-name">/api/users</span>
-                    </div>
-                    <div class="endpoint-actions">
-                        <button title="Edit"><i class="fas fa-edit"></i></button>
-                        <button title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-                <div class="endpoint-item">
-                    <div class="endpoint-info">
-                        <span class="endpoint-method method-get">GET</span>
-                        <span class="endpoint-name">/api/users/{id}</span>
-                    </div>
-                    <div class="endpoint-actions">
-                        <button title="Edit"><i class="fas fa-edit"></i></button>
-                        <button title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-                <div class="endpoint-item">
-                    <div class="endpoint-info">
-                        <span class="endpoint-method method-put">PUT</span>
-                        <span class="endpoint-name">/api/users/{id}</span>
-                    </div>
-                    <div class="endpoint-actions">
-                        <button title="Edit"><i class="fas fa-edit"></i></button>
-                        <button title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-                <div class="endpoint-item">
-                    <div class="endpoint-info">
-                        <span class="endpoint-method method-delete">DELETE</span>
-                        <span class="endpoint-name">/api/users/{id}</span>
-                    </div>
-                    <div class="endpoint-actions">
-                        <button title="Edit"><i class="fas fa-edit"></i></button>
-                        <button title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="main-content">
-            <div class="content-header">
-                <h2>Test API Endpoint</h2>
-                <p>Configure and test your API endpoints</p>
-            </div>
-            
-            <div class="api-form">
-                <div class="form-group">
-                    <label for="api-url">API Endpoint URL</label>
-                    <div class="url-input">
-                        <select class="method-select" id="api-method">
-                            <option value="GET">GET</option>
-                            <option value="POST" selected>POST</option>
-                            <option value="PUT">PUT</option>
-                            <option value="PATCH">PATCH</option>
-                            <option value="DELETE">DELETE</option>
-                        </select>
-                        <input type="text" class="url-field" id="api-url" value="https://api.example.com/users" placeholder="Enter API endpoint URL">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Query Parameters</label>
-                        <div class="params-list">
-                            <div class="list-header">
-                                <div>Key</div>
-                                <div>Value</div>
-                            </div>
-                            <div class="list-item">
-                                <div class="key-input">
-                                    <input type="text" placeholder="Parameter" value="limit">
-                                </div>
-                                <div class="value-input">
-                                    <input type="text" placeholder="Value" value="10">
-                                </div>
-                            </div>
-                            <button class="add-item-btn">
-                                <i class="fas fa-plus"></i> Add Parameter
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Headers</label>
-                        <div class="headers-list">
-                            <div class="list-header">
-                                <div>Key</div>
-                                <div>Value</div>
-                            </div>
-                            <div class="list-item">
-                                <div class="key-input">
-                                    <input type="text" placeholder="Header" value="Content-Type">
-                                </div>
-                                <div class="value-input">
-                                    <input type="text" placeholder="Value" value="application/json">
-                                </div>
-                            </div>
-                            <div class="list-item">
-                                <div class="key-input">
-                                    <input type="text" placeholder="Header" value="Authorization">
-                                </div>
-                                <div class="value-input">
-                                    <input type="text" placeholder="Value" value="Bearer token123">
-                                </div>
-                            </div>
-                            <button class="add-item-btn">
-                                <i class="fas fa-plus"></i> Add Header
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="api-body">Request Body</label>
-                    <textarea class="body-textarea" id="api-body">{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "age": 30
-}</textarea>
-                </div>
-                
-                <div class="form-actions">
-                    <button class="btn btn-outline">
-                        <i class="fas fa-redo"></i> Reset
-                    </button>
-                    <button class="btn btn-primary" id="send-request">
-                        <i class="fas fa-paper-plane"></i> Send Request
-                    </button>
-                </div>
-            </div>
-            
-            <div class="response-container">
-                <div class="response-header">
-                    <h3>Response</h3>
-                    <div class="status-indicator">
-                        <span>Status:</span>
-                        <span class="status-badge status-success">200 OK</span>
-                    </div>
-                </div>
-                <div class="response-content" id="response-content">
-{
-    "status": "success",
-    "data": {
-  
+<body class="bg-white text-gray-800 min-h-screen flex flex-col items-center justify-start pt-12 px-4">
+
+  <h1 class="text-3xl font-bold text-blue-600 mb-8">🔥 Ryezx API Tester</h1>
+
+  <div class="w-full max-w-2xl space-y-4">
+    <div>
+      <label class="block font-semibold mb-1 text-blue-700">Pilih Jenis API</label>
+      <select id="apiType" onchange="changeInputField()" class="w-full border border-blue-300 p-2 rounded-md">
+        <option value="tools/tiktok?url=" data-type="url">🎵 TikTok Downloader</option>
+        <option value="tools/ytmp3?url=" data-type="url">🎧 YouTube MP3</option>
+        <option value="tools/ytmp4?url=" data-type="url">🎬 YouTube MP4</option>
+        <option value="search/lirik?q=" data-type="text">🎤 Cari Lirik</option>
+        <option value="ai/chat?prompt=" data-type="text">🤖 ChatGPT AI</option>
+        <!-- Tambahin endpoint lain -->
+      </select>
+    </div>
+
+    <div>
+      <label id="inputLabel" class="block font-semibold mb-1 text-blue-700">Masukkan URL / Prompt</label>
+      <input type="text" id="apiInput" placeholder="https://..." class="w-full border border-gray-300 p-2 rounded-md" />
+    </div>
+
+    <button onclick="testAPI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md">
+      🔍 Tes API
+    </button>
+
+    <div>
+      <label class="block font-semibold mb-1 text-blue-700">📋 Hasil:</label>
+      <pre id="result" class="bg-gray-100 text-sm p-4 rounded-md overflow-x-auto whitespace-pre-wrap min-h-[200px]">Belum ada hasil</pre>
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = "https://xskycode-api.vercel.app/";
+
+    function changeInputField() {
+      const select = document.getElementById("apiType");
+      const selectedOption = select.options[select.selectedIndex];
+      const inputType = selectedOption.getAttribute("data-type");
+      const label = document.getElementById("inputLabel");
+
+      if (inputType === "url") {
+        label.textContent = "Masukkan URL";
+        document.getElementById("apiInput").placeholder = "https://...";
+      } else {
+        label.textContent = "Masukkan Prompt / Teks";
+        document.getElementById("apiInput").placeholder = "Contoh: Lirik lagu Hati-Hati di Jalan";
+      }
+    }
+
+    async function testAPI() {
+      const endpoint = document.getElementById("apiType").value;
+      const input = document.getElementById("apiInput").value.trim();
+      const fullURL = BASE_URL + endpoint + encodeURIComponent(input);
+
+      document.getElementById("result").textContent = "⏳ Loading...";
+
+      try {
+        const res = await fetch(fullURL);
+        const data = await res.json();
+        document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById("result").textContent = "❌ Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
