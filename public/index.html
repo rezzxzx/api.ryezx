@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ryezx API UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- CDN Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="max-w-2xl mx-auto p-4">
+      <h1 class="text-3xl font-bold mb-4 text-center">🔥 Ryezx API UI 🔥</h1>
+
+      <div id="api-list" class="space-y-4"></div>
+    </div>
+
+    <script>
+      const apis = [
+        {
+          name: "TikTok Downloader",
+          endpoint: "/downloader/tiktok?url=",
+          placeholder: "https://vt.tiktok.com/xxxxx"
+        },
+        {
+          name: "YouTube Downloader",
+          endpoint: "/downloader/ytdl?url=",
+          placeholder: "https://youtube.com/watch?v=xxxxx"
+        },
+        // Tambahin aja di sini bro...
+      ];
+
+      const container = document.getElementById("api-list");
+
+      apis.forEach((api) => {
+        const div = document.createElement("div");
+        div.className = "bg-white rounded-xl shadow p-4";
+
+        div.innerHTML = `
+          <h2 class="font-semibold text-lg">${api.name}</h2>
+          <input type="text" placeholder="${api.placeholder}" class="w-full mt-2 p-2 border rounded" id="${api.name}-input" />
+          <button class="mt-2 bg-blue-500 text-white px-4 py-1 rounded" onclick="testApi('${api.endpoint}', '${api.name}')">Test API</button>
+          <pre class="mt-2 p-2 bg-gray-100 rounded text-sm overflow-auto" id="${api.name}-output">Waiting...</pre>
+        `;
+        container.appendChild(div);
+      });
+
+      async function testApi(endpoint, name) {
+        const input = document.getElementById(`${name}-input`).value;
+        const output = document.getElementById(`${name}-output`);
+        try {
+          const res = await fetch(endpoint + encodeURIComponent(input));
+          const data = await res.json();
+          output.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          output.textContent = "❌ Gagal fetch API";
+        }
+      }
+    </script>
+  </body>
+</html>
