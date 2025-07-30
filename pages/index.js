@@ -22,7 +22,7 @@ const endpoints = [
     placeholder: "ex: aesthetic wallpaper",
     path: "search/pinsearch?query=",
   },
-  // Tambahin endpoint baru di sini ya bro
+  // tambahin endpoint lain tinggal tambah object baru aja di sini bro 👇
 ];
 
 export default function Home() {
@@ -67,12 +67,10 @@ export default function Home() {
             </button>
 
             {results[ep.name] && (
-  <div className="mt-4 overflow-auto max-w-full">
-    <div className="min-w-[600px] bg-gray-800 text-green-400 text-sm rounded p-3 whitespace-pre-wrap break-words">
-      <pre>{JSON.stringify(results[ep.name], null, 2)}</pre>
-    </div>
-  </div>
-)}
+              <div className="mt-4 overflow-auto max-h-64 bg-gray-800 text-green-400 text-sm rounded p-3">
+                <pre className="whitespace-pre font-mono min-w-full overflow-x-auto">{JSON.stringify(results[ep.name], null, 2)}</pre>
+              </div>
+            )}
           </div>
         ))}
       </div>
