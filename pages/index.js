@@ -1,3 +1,5 @@
+// pages/index.js
+
 import { useState } from "react";
 import axios from "axios";
 
@@ -9,20 +11,19 @@ const endpoints = [
   },
   {
     name: "YouTube Search",
-    placeholder: "ex: lofi music",
+    placeholder: "lofi music",
     path: "search/youtube?q=",
   },
   {
     name: "AI Chat (Chatsandbox)",
-    placeholder: "ex: siapa presiden indonesia?",
+    placeholder: "siapa presiden indonesia?",
     path: "ai/ai-chatsandbox?prompt=",
   },
   {
     name: "Pinterest Search",
-    placeholder: "ex: aesthetic wallpaper",
+    placeholder: "aesthetic wallpaper",
     path: "search/pinsearch?query=",
   },
-  // Tambahin endpoint baru tinggal tambah object di sini
 ];
 
 export default function Home() {
@@ -34,23 +35,30 @@ export default function Home() {
   };
 
   const handleTest = async (endpoint) => {
-    const baseURL = typeof window !== "undefined" ? window.location.origin + "/" : "/";
-    const fullURL = baseURL + endpoint.path + encodeURIComponent(inputs[endpoint.name] || "");
+    const baseURL =
+      typeof window !== "undefined" ? window.location.origin + "/" : "/";
+    const fullURL =
+      baseURL + endpoint.path + encodeURIComponent(inputs[endpoint.name] || "");
     try {
       const res = await axios.get(fullURL);
       setResults({ ...results, [endpoint.name]: res.data });
     } catch (err) {
-      setResults({ ...results, [endpoint.name]: { error: "Gagal fetch data." } });
+      setResults({
+        ...results,
+        [endpoint.name]: { error: "Gagal fetch data." },
+      });
     }
   };
 
   return (
-    <div className="min-h-screen bg-blue-950 text-white p-4">
-      <h1 className="text-3xl font-bold text-center mb-8">🔥 Ryezx API Playground</h1>
+    <div className="min-h-screen bg-gray-900 text-white p-4">
+      <h1 className="text-3xl font-bold text-center mb-8">
+        🔗 Ryezx API Playground
+      </h1>
 
       <div className="grid gap-8 max-w-3xl mx-auto">
         {endpoints.map((ep, idx) => (
-          <div key={idx} className="bg-blue-900 p-5 rounded-xl shadow-md">
+          <div key={idx} className="bg-gray-800 p-5 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-2">{ep.name}</h2>
             <input
               type="text"
@@ -67,9 +75,9 @@ export default function Home() {
             </button>
 
             {results[ep.name] && (
-              <div className="overflow-x-auto bg-gray-900 mt-4 p-3 rounded-lg">
-                <pre className="whitespace-pre text-sm text-green-400 font-mono min-w-[600px] inline-block">
-                  <code>{JSON.stringify(results[ep.name], null, 2)}</code>
+              <div className="overflow-auto mt-4 max-h-64">
+                <pre className="bg-gray-950 p-3 rounded text-green-400 text-sm min-w-[500px] whitespace-pre">
+                  {JSON.stringify(results[ep.name], null, 2)}
                 </pre>
               </div>
             )}
