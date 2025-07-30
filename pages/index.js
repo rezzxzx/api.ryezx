@@ -77,12 +77,12 @@ export default function Home() {
             </button>
 
             {results[ep.name] && (
-              <div className="w-full overflow-x-auto">
-  <pre className="text-sm text-green-400 font-mono whitespace-pre break-words inline-block min-w-full">
-    {JSON.stringify(results[ep.name], null, 2)}
-  </pre>
-</div>
-            )}
+  <div className="w-full overflow-x-auto">
+    <code className="text-sm text-green-400 font-mono whitespace-nowrap">
+      {JSON.stringify(results[ep.name])}
+    </code>
+  </div>
+)}
           </div>
         ))}
       </div>
