@@ -22,7 +22,7 @@ const endpoints = [
     placeholder: "ex: aesthetic wallpaper",
     path: "search/pinsearch?query=",
   },
-  // tambah endpoint baru di array ini aja
+  // Tambahin endpoint baru tinggal tambah object di sini
 ];
 
 export default function Home() {
@@ -34,33 +34,23 @@ export default function Home() {
   };
 
   const handleTest = async (endpoint) => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const fullURL =
-      `${origin}/${endpoint.path}` +
-      encodeURIComponent(inputs[endpoint.name] || "");
-
+    const baseURL = typeof window !== "undefined" ? window.location.origin + "/" : "/";
+    const fullURL = baseURL + endpoint.path + encodeURIComponent(inputs[endpoint.name] || "");
     try {
       const res = await axios.get(fullURL);
       setResults({ ...results, [endpoint.name]: res.data });
-    } catch {
-      setResults({
-        ...results,
-        [endpoint.name]: { error: "Gagal fetch data." },
-      });
+    } catch (err) {
+      setResults({ ...results, [endpoint.name]: { error: "Gagal fetch data." } });
     }
   };
 
   return (
-    <div className="min-h-screen bg-blue-950 text-white p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        🔗 Ryezx API Playground
-      </h1>
+    <div className="min-h-screen bg-blue-950 text-white p-4">
+      <h1 className="text-3xl font-bold text-center mb-8">🔗 Ryezx API Playground</h1>
+
       <div className="grid gap-8 max-w-3xl mx-auto">
-        {endpoints.map((ep) => (
-          <div
-            key={ep.name}
-            className="bg-blue-900 p-5 rounded-xl shadow-md"
-          >
+        {endpoints.map((ep, idx) => (
+          <div key={idx} className="bg-blue-900 p-5 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-2">{ep.name}</h2>
             <input
               type="text"
@@ -77,15 +67,15 @@ export default function Home() {
             </button>
 
             {results[ep.name] && (
-  <div className="w-full overflow-auto max-h-96 bg-gray-900 rounded-md p-2">
-    <pre className="text-sm text-green-400 font-mono">
-      {JSON.stringify(results[ep.name], null, 2)}
-    </pre>
-  </div>
-)}
+              <div className="overflow-x-auto bg-gray-900 mt-4 p-3 rounded-lg">
+                <pre className="whitespace-pre text-sm text-green-400 font-mono min-w-[600px] inline-block">
+                  <code>{JSON.stringify(results[ep.name], null, 2)}</code>
+                </pre>
+              </div>
+            )}
           </div>
         ))}
       </div>
     </div>
   );
-                }
+}
