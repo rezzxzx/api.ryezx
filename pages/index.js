@@ -170,7 +170,7 @@ const endpoints = [
   {
     name: "AI ChatGPT",
     placeholder: "ex: write a poem about nature",
-    path: "ai/chatgpt?prompt=",
+    path: "ai/chatgpt?question=",
     category: "AI",
     description: "Chat dengan ChatGPT untuk berbagai kebutuhan",
     icon: "💬"
@@ -591,7 +591,7 @@ export default function Home() {
               <span>•</span>
               <span>Total APIs: {endpoints.length}</span>
               <span>•</span>
-              <span>Made with ❤️ by RyezX</span>
+              <span>Created by RyezX</span>
               <span>•</span>
               <span>v4.0 Professional</span>
             </div>
