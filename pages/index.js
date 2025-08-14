@@ -120,7 +120,7 @@ const endpoints = [
   {
     name: "TikTok Search",
     placeholder: "ex: dance viral",
-    path: "search/tiktok?query=",
+    path: "search/tiktok?q=",
     category: "Search",
     description: "Cari video trending di TikTok",
     icon: "🔥"
@@ -128,7 +128,7 @@ const endpoints = [
   {
     name: "Google Image Search",
     placeholder: "ex: cute cat",
-    path: "search/googleimg?query=",
+    path: "search/googleimg?q=",
     category: "Search",
     description: "Cari gambar di Google dengan filter advanced",
     icon: "🖥️"
@@ -136,7 +136,7 @@ const endpoints = [
   {
     name: "BiliBili Search",
     placeholder: "ex: anime music",
-    path: "search/bstation?query=",
+    path: "search/bstation?q=",
     category: "Search",
     description: "Cari konten di platform BiliBili",
     icon: "🎌"
@@ -146,7 +146,7 @@ const endpoints = [
   {
     name: "AI ChatSandbox",
     placeholder: "ex: siapa presiden indonesia?",
-    path: "ai/chatsandbox?prompt=",
+    path: "ai/chatsandbox?query=",
     category: "AI",
     description: "Chat dengan AI ChatSandbox yang powerful",
     icon: "🤖"
