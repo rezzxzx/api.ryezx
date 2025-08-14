@@ -146,7 +146,7 @@ const endpoints = [
   {
     name: "AI ChatSandbox",
     placeholder: "ex: siapa presiden indonesia?",
-    path: "ai/chatsandbox?query=",
+    path: "ai/chatsandbox?promt=",
     category: "AI",
     description: "Chat dengan AI ChatSandbox yang powerful",
     icon: "🤖"
